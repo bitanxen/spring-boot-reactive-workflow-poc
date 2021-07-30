@@ -1,6 +1,7 @@
 package in.bitanxen.app.service;
 
 import in.bitanxen.app.config.provider.User;
+import in.bitanxen.app.dto.casestatus.CaseStatusDTO;
 import in.bitanxen.app.dto.workflow.CreateWorkflowDTO;
 import in.bitanxen.app.dto.workflow.UpdateWorkflowDTO;
 import in.bitanxen.app.dto.workflow.WorkflowDTO;
@@ -37,9 +38,13 @@ public class WorkflowServiceImpl implements WorkflowService {
     }
 
     @Override
-    public Mono<WorkflowDTO> getWorkflow(String workflowId) {
-        System.out.println("workflowId"+workflowId);
-        return workflowRepository.findById(workflowId).log().map(this::convertIntoDTO);
+    public Mono<Workflow> getWorkflow(String workflowId) {
+        return workflowRepository.findById(workflowId);
+    }
+
+    @Override
+    public Mono<WorkflowDTO> getWorkflowDetails(String workflowId) {
+        return getWorkflow(workflowId).map(this::convertIntoDTO);
     }
 
     @Override
@@ -54,7 +59,7 @@ public class WorkflowServiceImpl implements WorkflowService {
                     CaseStatus initialCaseStatus = new CaseStatus(workflowId, "Started", CaseStatusType.STARTED, user.getMemberId());
                     return caseStatusRepository.save(initialCaseStatus);
                 })
-                .flatMap(caseStatus -> getWorkflow(caseStatus.getWorkflowId()));
+                .flatMap(caseStatus -> getWorkflowDetails(caseStatus.getWorkflowId()));
     }
 
     @Override
@@ -67,7 +72,7 @@ public class WorkflowServiceImpl implements WorkflowService {
             return null;
         }
 
-
-        return new WorkflowDTO(workflow.getId(), workflow.getWorkflowName(), workflow.isEnabled());
+        return new WorkflowDTO(workflow.getId(), workflow.getWorkflowName(), workflow.isEnabled(),
+                workflow.getCreatedBy(), workflow.getCreatedOn(), workflow.getUpdatedBy(), workflow.getUpdatedOn());
     }
 }

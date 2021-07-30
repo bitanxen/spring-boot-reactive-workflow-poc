@@ -1,9 +1,11 @@
-package in.bitanxen.app.dto.workflow;
+package in.bitanxen.app.dto.casestatus;
 
+import in.bitanxen.app.model.CaseStatusType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
 
@@ -11,10 +13,11 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class WorkflowDTO {
+public class CaseStatusDTO {
+    private String caseStatusId;
     private String workflowId;
-    private String workflowName;
-    private boolean enabled;
+    private String caseStatusName;
+    private CaseStatusType caseStatusType;
     private String createdBy;
     private LocalDateTime createdOn;
     private String updatedBy;

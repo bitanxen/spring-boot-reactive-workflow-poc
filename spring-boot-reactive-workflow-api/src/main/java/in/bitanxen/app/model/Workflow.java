@@ -1,6 +1,7 @@
 package in.bitanxen.app.model;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @Document(collection = "tb_workflow")
 @Getter
 @Setter
+@NoArgsConstructor
 public class Workflow {
 
     @Id
@@ -38,7 +40,7 @@ public class Workflow {
     private String updatedBy;
 
     @Field(name = "updated_on")
-    private String updatedOn;
+    private LocalDateTime updatedOn;
 
     public Workflow(String workflowName, String workflowDescription, String subscriberId, String createdBy) {
         this.workflowName = workflowName;
