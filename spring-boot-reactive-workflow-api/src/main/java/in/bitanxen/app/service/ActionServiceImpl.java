@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 @Service
 public class ActionServiceImpl implements ActionService {
 
@@ -186,21 +188,20 @@ public class ActionServiceImpl implements ActionService {
                     actionDTO.setDestinationWorkflowName(workflow.getWorkflowName());
                     return actionDTO;
                 })
-                .flatMap(actionDTO -> actionFieldTemplateRepository.findAllByActionId(action.getId())
-                        .flatMap(this::convertIntoActionField)
-                        .collectList()
-                        .flatMap(l -> {
-                            actionDTO.setTemplateFields(l);
-                            return Mono.just(actionDTO);
-                        }));
+                .flatMap(actionDTO -> convertIntoActionField(action.getId())
+                        .map(templateFields -> {
+                            actionDTO.setTemplateFields(templateFields);
+                            return actionDTO;
+                        })
+                );
     }
 
-    private Flux<TemplateFieldDTO> convertIntoActionField(ActionFieldTemplate actionFieldTemplate) {
-        if(actionFieldTemplate == null) {
-            return Flux.empty();
+    private Mono<List<TemplateFieldDTO>> convertIntoActionField(String actionId) {
+        if(actionId == null) {
+            return Mono.empty();
         }
 
-        return Flux.empty();
+        return Mono.empty();
         /*
         return Mono.just(actionFieldTemplate)
                 .map(aft -> {

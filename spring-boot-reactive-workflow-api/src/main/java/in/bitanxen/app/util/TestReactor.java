@@ -5,6 +5,7 @@ import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 import reactor.util.function.Tuples;
 
+import java.time.Duration;
 import java.util.List;
 
 public class TestReactor {
@@ -29,7 +30,5 @@ public class TestReactor {
 
                     return list;
                 });
-
-        System.out.println(map.subscribe());
     }
 }
