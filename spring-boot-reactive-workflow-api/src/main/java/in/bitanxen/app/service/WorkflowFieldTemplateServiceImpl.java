@@ -34,15 +34,18 @@ public class WorkflowFieldTemplateServiceImpl implements WorkflowFieldTemplateSe
 
     @Override
     public Mono<WorkflowFieldDTO> createFieldTemplate(Mono<CreatedWorkflowFieldDTO> createdWorkflowField, User user) {
+        return createFieldTemplateDirect(createdWorkflowField, user)
+                .flatMap(this::convertIntoDTO);
+    }
+
+    @Override
+    public Mono<WorkflowFieldTemplate> createFieldTemplateDirect(Mono<CreatedWorkflowFieldDTO> createdWorkflowField, User user) {
         return createdWorkflowField
                 .flatMap(cwf -> workflowService.getWorkflow(cwf.getWorkflowId())
                         .map(workflow -> new WorkflowFieldTemplate(workflow.getId(), cwf.getFieldName(), cwf.getFieldDescription(), cwf.getFieldType(),
                                 cwf.getFieldValidation(), user.getMemberId())))
-                .doOnNext(wft -> workflowFieldTemplateRepository.findByWorkflowIdAndFieldName(wft.getWorkflowId(), wft.getFieldName())
-                        .hasElement()
-                        .then(Mono.error(new WorkflowException("Duplicate field in this workflow"))))
-                .flatMap(workflowFieldTemplateRepository::save)
-                .flatMap(this::convertIntoDTO);
+                .flatMap(wft -> workflowFieldTemplateRepository.findByWorkflowIdAndFieldName(wft.getWorkflowId(), wft.getFieldName())
+                        .switchIfEmpty(workflowFieldTemplateRepository.save(wft)));
     }
 
     @Override

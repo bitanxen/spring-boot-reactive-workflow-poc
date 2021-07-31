@@ -1,8 +1,11 @@
 package in.bitanxen.app.util;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 import reactor.util.function.Tuples;
+
+import java.util.List;
 
 public class TestReactor {
 
@@ -15,6 +18,18 @@ public class TestReactor {
                 .zipWith(i > 10 ? hello : Mono.just(""))
                 .map(objects -> objects.getT2() + " " + objects.getT1())
                 .block();
-        System.out.println(bitan);
+
+        Flux<Object> map = Flux.just("1", "2", "5")
+                .zipWith(Flux.just("3", "4"))
+                .map(objects -> {
+                    List<Object> list = objects.toList();
+
+                    System.out.println(objects+": "+objects.getT1());
+                    System.out.println(objects+": "+objects.getT2());
+
+                    return list;
+                });
+
+        System.out.println(map.subscribe());
     }
 }
