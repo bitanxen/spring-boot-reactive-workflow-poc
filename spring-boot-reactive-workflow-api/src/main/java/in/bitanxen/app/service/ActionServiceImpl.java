@@ -13,8 +13,12 @@ import in.bitanxen.app.repository.ActionRepository;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.util.function.Tuple2;
+import reactor.util.function.Tuples;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ActionServiceImpl implements ActionService {
@@ -110,9 +114,14 @@ public class ActionServiceImpl implements ActionService {
                             .switchIfEmpty(Mono.defer(() -> actionFieldTemplateRepository.save(new ActionFieldTemplate(action.getId(), workflowFieldTemplate.getId(), createActionField.getFieldValidation()))));
                 })
                 .flatMap(actionFieldTemplate -> getAction(createActionField.getActionId()))
-                .log()
                 .flatMap(this::convertIntoDTO);
 
+    }
+
+    @Override
+    public Flux<TemplateFieldDTO> getActionField(String actionId) {
+        return convertIntoActionField(actionId)
+                .flatMapMany(Flux::fromIterable);
     }
 
     private Mono<CaseStatus> getDestination(CreateActionDTO createAction, User user) {
@@ -201,14 +210,58 @@ public class ActionServiceImpl implements ActionService {
             return Mono.empty();
         }
 
-        return Mono.empty();
-        /*
-        return Mono.just(actionFieldTemplate)
-                .map(aft -> {
-                    aft.getWorkflowFieldId()
-                })
+        return Mono.just(actionId)
+                .flatMap(this::getAction)
+                .flatMap(action -> Mono.zip(
+                        actionFieldTemplateRepository.findAllByActionId(action.getId()).collectList(),
+                        caseStatusService.getCaseStatusFields(action.getDestinationCaseStatusId()).collectList()
+                ))
+                .flatMap(tuple -> {
+                    List<ActionFieldTemplate> actionFields = tuple.getT1();
+                    List<CaseStatusFieldTemplate> caseStatusFields = tuple.getT2();
 
-         */
+                    Mono<List<TemplateFieldDTO>> caseStatusSelectedFields = Mono.just(caseStatusFields)
+                            .flatMapMany(Flux::fromIterable)
+                            //.filter(caseStatusFieldTemplate -> caseStatusFieldTemplate.getFieldValidation().equals(TemplateFieldValidation.MANDATORY))
+                            .filter(caseStatusFieldTemplate -> !fieldInAction(caseStatusFieldTemplate, actionFields))
+                            .flatMap(caseStatusService::convertCaseStatusFieldToDTO)
+                            .collectList();
+
+                    Mono<List<TemplateFieldDTO>> actionSelectedFields = Mono.just(actionFields)
+                            .flatMapMany(Flux::fromIterable)
+                            //.filter(actionFieldTemplate -> actionFieldTemplate.getFieldValidation().equals(TemplateFieldValidation.MANDATORY))
+                            .flatMap(this::convertActionFieldToDTO)
+                            .collectList();
+                    return Mono.zip(caseStatusSelectedFields, actionSelectedFields)
+                            .map(selectedTuple -> {
+                                List<TemplateFieldDTO> t1 = selectedTuple.getT1();
+                                List<TemplateFieldDTO> t2 = selectedTuple.getT2();
+
+                                List<TemplateFieldDTO> finalData = new ArrayList<>();
+                                finalData.addAll(t1);
+                                finalData.addAll(t2);
+                                return finalData;
+                            });
+                });
     }
+
+    private boolean fieldInAction(CaseStatusFieldTemplate caseStatusFieldTemplate, List<ActionFieldTemplate> actionFields) {
+        return actionFields.stream()
+                .anyMatch(actionFieldTemplate -> actionFieldTemplate.getWorkflowFieldId().equals(caseStatusFieldTemplate.getWorkflowFieldId()));
+    }
+
+    private Mono<TemplateFieldDTO> convertActionFieldToDTO(ActionFieldTemplate actionFieldTemplate) {
+        return Mono.just(actionFieldTemplate)
+                .zipWith(workflowFieldTemplateService.getFieldTemplate(actionFieldTemplate.getWorkflowFieldId()))
+                .map(tuple -> {
+                    ActionFieldTemplate t1 = tuple.getT1();
+                    WorkflowFieldTemplate t2 = tuple.getT2();
+
+                    return new TemplateFieldDTO(t2.getId(), t2.getWorkflowId(), t2.getFieldName(), t2.getFieldDescription(),
+                            t2.getFieldType(), t2.getFieldValidation(), t1.getFieldValidation(),
+                            t2.getCreatedBy(), t2.getCreatedOn(), t2.getUpdatedBy(), t2.getUpdatedOn());
+                });
+    }
+
 
 }

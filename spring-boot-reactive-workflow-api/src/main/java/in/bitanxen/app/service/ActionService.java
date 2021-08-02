@@ -5,6 +5,7 @@ import in.bitanxen.app.dto.action.ActionDTO;
 import in.bitanxen.app.dto.action.CreateActionDTO;
 import in.bitanxen.app.dto.action.field.CreateActionFieldDTO;
 import in.bitanxen.app.dto.casestatus.CaseStatusDTO;
+import in.bitanxen.app.dto.workflow.field.TemplateFieldDTO;
 import in.bitanxen.app.model.Action;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -17,4 +18,5 @@ public interface ActionService {
     Flux<ActionDTO> getWorkflowActions(String workflowId);
 
     Mono<ActionDTO> createActionField(CreateActionFieldDTO createActionField, User user);
+    Flux<TemplateFieldDTO> getActionField(String actionId);
 }

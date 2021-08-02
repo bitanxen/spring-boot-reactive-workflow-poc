@@ -22,8 +22,8 @@ public class Case {
     @Field(name = "workflow_id")
     private String workflowId;
 
-    @Field(name = "case_status")
-    private String caseStatus;
+    @Field(name = "case_status_id")
+    private String caseStatusId;
 
     @Field(name = "case_details")
     private Map<String, String> caseDetails;
@@ -34,9 +34,8 @@ public class Case {
     @Field(name = "created_on")
     private LocalDateTime createdOn;
 
-    public Case(String workflowId, String caseStatus, String createdBy) {
+    public Case(String workflowId, String createdBy) {
         this.workflowId = workflowId;
-        this.caseStatus = caseStatus;
         this.createdBy = createdBy;
         this.createdOn = LocalDateTime.now();
     }

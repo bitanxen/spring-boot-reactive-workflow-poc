@@ -15,4 +15,6 @@ public interface WorkflowFieldTemplateService {
     Mono<WorkflowFieldTemplate> createFieldTemplateDirect(Mono<CreatedWorkflowFieldDTO> createdWorkflowField, User user);
 
     Flux<WorkflowFieldDTO> getWorkflowFields(String workflowId);
+
+    Flux<WorkflowFieldDTO> getWorkflowCaseFields(String workflowId);
 }

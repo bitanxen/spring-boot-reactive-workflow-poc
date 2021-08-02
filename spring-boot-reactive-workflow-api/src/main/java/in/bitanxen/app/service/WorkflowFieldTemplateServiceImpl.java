@@ -5,6 +5,7 @@ import in.bitanxen.app.dto.workflow.field.CreatedWorkflowFieldDTO;
 import in.bitanxen.app.dto.workflow.field.WorkflowFieldDTO;
 import in.bitanxen.app.exception.WorkflowException;
 import in.bitanxen.app.model.WorkflowFieldTemplate;
+import in.bitanxen.app.model.WorkflowFieldValidation;
 import in.bitanxen.app.repository.WorkflowFieldTemplateRepository;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -51,6 +52,16 @@ public class WorkflowFieldTemplateServiceImpl implements WorkflowFieldTemplateSe
     @Override
     public Flux<WorkflowFieldDTO> getWorkflowFields(String workflowId) {
         return workflowFieldTemplateRepository.findByWorkflowId(workflowId).flatMap(this::convertIntoDTO);
+    }
+
+    @Override
+    public Flux<WorkflowFieldDTO> getWorkflowCaseFields(String workflowId) {
+        return workflowFieldTemplateRepository.findByWorkflowId(workflowId)
+                .filter(workflowFieldTemplate ->
+                                workflowFieldTemplate.getFieldValidation().equals(WorkflowFieldValidation.INITIAL) ||
+                                        workflowFieldTemplate.getFieldValidation().equals(WorkflowFieldValidation.INITIAL_MANDATORY)
+                        )
+                .flatMap(this::convertIntoDTO);
     }
 
     private Mono<WorkflowFieldDTO> convertIntoDTO(WorkflowFieldTemplate workflowFieldTemplate) {
