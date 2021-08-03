@@ -27,17 +27,17 @@ public class CaseServiceImpl implements CaseService {
 
     private final WorkflowService workflowService;
     private final WorkflowFieldTemplateService workflowFieldTemplateService;
-    private final WorkflowEventService workflowEventService;
+    private final WorkflowRealTimeService workflowRealTimeService;
     private final CaseStatusService caseStatusService;
     private final ActionService actionService;
 
     private final CaseRepository caseRepository;
 
-    public CaseServiceImpl(WorkflowService workflowService, WorkflowFieldTemplateService workflowFieldTemplateService, WorkflowEventService workflowEventService,
+    public CaseServiceImpl(WorkflowService workflowService, WorkflowFieldTemplateService workflowFieldTemplateService, WorkflowRealTimeService workflowRealTimeService,
                            CaseStatusService caseStatusService, ActionService actionService, CaseRepository caseRepository) {
         this.workflowService = workflowService;
         this.workflowFieldTemplateService = workflowFieldTemplateService;
-        this.workflowEventService = workflowEventService;
+        this.workflowRealTimeService = workflowRealTimeService;
         this.caseStatusService = caseStatusService;
         this.actionService = actionService;
         this.caseRepository = caseRepository;
@@ -64,9 +64,9 @@ public class CaseServiceImpl implements CaseService {
                     caseDetails.setCaseStatusId(caseStatus.getId());
                     return Mono.just(caseDetails);
                 })
-                .doOnNext(caseDetails -> workflowEventService.publishCasePreCreateEvent(caseDetails, user))
+                .doOnNext(caseDetails -> workflowRealTimeService.publishCasePreCreateEvent(caseDetails, user))
                 .flatMap(caseRepository::save)
-                .doOnNext(caseDetails -> workflowEventService.publishCasePostCreateEvent(caseDetails, user))
+                .doOnNext(caseDetails -> workflowRealTimeService.publishCasePostCreateEvent(caseDetails, user))
                 .flatMap(this::convertIntoDTO);
 
     }
