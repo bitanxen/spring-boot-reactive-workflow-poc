@@ -1,6 +1,5 @@
-package in.bitanxen.app.dto.caseworkflow;
+package in.bitanxen.app.dto;
 
-import in.bitanxen.app.model.CaseStatusType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -30,6 +30,6 @@ public class CaseWorkflowController {
 
     @PostMapping("/id/{caseId}/action")
     public Mono<CaseDTO> performAction(@PathVariable String caseId, @RequestBody CaseActionDTO caseAction) {
-        return caseService.getCasePerformAction(caseId, caseAction);
+        return caseService.getCasePerformAction(caseId, caseAction, CommonUtil.getUser());
     }
 }

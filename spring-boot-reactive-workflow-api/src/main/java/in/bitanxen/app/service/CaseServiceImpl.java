@@ -14,6 +14,8 @@ import in.bitanxen.app.util.CommonUtil;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Scheduler;
+import reactor.core.scheduler.Schedulers;
 import reactor.util.function.Tuple2;
 import reactor.util.function.Tuples;
 
@@ -72,7 +74,7 @@ public class CaseServiceImpl implements CaseService {
     }
 
     @Override
-    public Mono<CaseDTO> getCasePerformAction(String caseId, CaseActionDTO caseAction) {
+    public Mono<CaseDTO> getCasePerformAction(String caseId, CaseActionDTO caseAction, User user) {
         return getCase(caseId)
                 .zipWith(actionService.getActionDetails(caseAction.getActionId()))
                 .flatMap(objects -> {
@@ -98,6 +100,7 @@ public class CaseServiceImpl implements CaseService {
                     return Mono.just(caseDetails);
                 })
                 .flatMap(caseRepository::save)
+                .doOnNext(caseDetails -> workflowRealTimeService.publishCaseActionEvent(caseDetails, caseAction.getActionId(), user))
                 .flatMap(this::convertIntoDTO);
     }
 

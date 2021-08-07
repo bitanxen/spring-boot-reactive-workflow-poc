@@ -13,10 +13,23 @@
   <properties>
     <java.version>1.8</java.version>
     <main.basedir>${project.basedir}</main.basedir>
+    <spring.boot.version>2.5.3</spring.boot.version>
+    <lombok.version>1.18.20</lombok.version>
   </properties>
 
   <dependencies>
-    
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-rsocket</artifactId>
+      <version>${spring.boot.version}</version>
+    </dependency>
+
+
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>${lombok.version}</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -63,5 +76,15 @@
         </plugin>
       </plugins>
     </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>8</source>
+          <target>8</target>
+        </configuration>
+      </plugin>
+    </plugins>
   </build>
 </project>

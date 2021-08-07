@@ -15,5 +15,5 @@ public interface CaseService {
 
     Mono<CaseDTO> createCase(CreateCaseDTO createCase, User user);
 
-    Mono<CaseDTO> getCasePerformAction(String caseId, CaseActionDTO caseAction);
+    Mono<CaseDTO> getCasePerformAction(String caseId, CaseActionDTO caseAction, User user);
 }
