@@ -7,6 +7,7 @@ import in.bitanxen.app.config.WorkflowRegistrationContextHolder;
 import in.bitanxen.app.dto.CaseEventDTO;
 import in.bitanxen.app.dto.GetCaseDetailsDTO;
 import in.bitanxen.app.exception.WorkflowClientException;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,7 +34,12 @@ public class WorkflowClientServiceImpl implements WorkflowClientService {
     }
 
     @Override
-    public void streamData(CaseEventDTO caseEvent) {
+    public void processStreamData(ApplicationReadyEvent applicationReadyEvent) {
+        rSocketClientOperation.requestStream("workflow.case.realtime", CaseEventDTO.class)
+                .subscribe(this::streamData);
+    }
+
+    private void streamData(CaseEventDTO caseEvent) {
         List<WorkflowRegistration> workflowRegistrations = WorkflowRegistrationContextHolder.getRegistrations()
                 .stream()
                 .filter(workflowRegistration -> workflowRegistration.getWorkflowId().equals(caseEvent.getCurrentWorkflowId()) ||
