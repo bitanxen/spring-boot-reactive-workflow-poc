@@ -32,11 +32,11 @@ public class RSocketClientOperation {
         this.workflowServiceRegistry = workflowServiceRegistry;
     }
 
-    public String fireAndForget(String route, Object data) {
+    public <T> T fireAndForget(String route, Object data, Class<T> targetClass) {
         return rSocketRequester
                 .route(route)
                 .data(data)
-                .retrieveMono(String.class)
+                .retrieveMono(targetClass)
                 .subscribeOn(Schedulers.boundedElastic())
                 .block();
     }

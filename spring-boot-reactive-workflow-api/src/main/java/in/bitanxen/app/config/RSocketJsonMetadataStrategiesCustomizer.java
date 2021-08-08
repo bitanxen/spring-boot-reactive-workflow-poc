@@ -8,7 +8,7 @@ import org.springframework.util.MimeType;
 
 import java.util.Map;
 
-@Component
+//@Component
 public class RSocketJsonMetadataStrategiesCustomizer implements RSocketStrategiesCustomizer {
 
     public static final MimeType METADATA_MIME_TYPE = MimeType.valueOf("application/vnd.spring.rsocket.metadata+json");

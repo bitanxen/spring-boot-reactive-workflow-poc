@@ -1,6 +1,11 @@
 package in.bitanxen.app.config;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.rsocket.core.Resume;
+import io.rsocket.frame.ResumeFrameCodec;
+import io.rsocket.frame.decoder.PayloadDecoder;
+import io.rsocket.resume.InMemoryResumableFramesStore;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.rsocket.server.RSocketServerCustomizer;
 import org.springframework.context.annotation.Bean;
@@ -10,7 +15,9 @@ import org.springframework.messaging.rsocket.RSocketStrategies;
 import org.springframework.messaging.rsocket.annotation.support.RSocketMessageHandler;
 import reactor.util.retry.Retry;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import io.netty.buffer.ByteBuf;
 
 @Configuration
 @Slf4j
@@ -25,14 +32,17 @@ public class RSocketConfig {
         return messageHandler;
     }
 
+
+
     @Bean
     RSocketServerCustomizer rSocketResume() {
-        Resume resume =
-                new Resume()
-                        .sessionDuration(Duration.ofMinutes(15))
-                        .retry(
-                                Retry.fixedDelay(Long.MAX_VALUE, Duration.ofSeconds(5))
-                                        .doBeforeRetry(s -> log.debug("Disconnected. Trying to resume...")));
+        Resume resume = new Resume()
+                .sessionDuration(Duration.ofMinutes(20))
+                .streamTimeout(Duration.ofMinutes(10))
+                .cleanupStoreOnKeepAlive()
+                .storeFactory(byteBuf -> {
+                    return new InMemoryResumableFramesStore("1", byteBuf, 100);
+                });
         return rSocketServer -> rSocketServer.resume(resume);
     }
 }

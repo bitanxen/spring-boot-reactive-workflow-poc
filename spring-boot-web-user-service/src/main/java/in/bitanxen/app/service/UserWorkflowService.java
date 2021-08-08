@@ -1,5 +1,7 @@
 package in.bitanxen.app.service;
 
+import in.bitanxen.app.dto.CaseDTO;
+
 public interface UserWorkflowService {
-    String getCaseDetails(String caseId);
+    CaseDTO getCaseDetails(String caseId);
 }

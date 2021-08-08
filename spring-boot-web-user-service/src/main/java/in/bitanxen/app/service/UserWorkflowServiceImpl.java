@@ -3,6 +3,7 @@ package in.bitanxen.app.service;
 import in.bitanxen.app.config.AbstractWorkflowOperation;
 import in.bitanxen.app.config.CaseEvent;
 import in.bitanxen.app.config.WorkflowRegistrationContextHolder;
+import in.bitanxen.app.dto.CaseDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -32,7 +33,7 @@ public class UserWorkflowServiceImpl extends AbstractWorkflowOperation implement
     }
 
     @Override
-    public String getCaseDetails(String caseId) {
+    public CaseDTO getCaseDetails(String caseId) {
         System.out.println(WorkflowRegistrationContextHolder.getRegistrations());
         return super.getCaseDetails(caseId);
     }
