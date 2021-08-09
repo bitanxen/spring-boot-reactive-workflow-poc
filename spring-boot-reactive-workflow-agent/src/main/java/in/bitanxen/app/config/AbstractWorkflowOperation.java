@@ -1,5 +1,6 @@
 package in.bitanxen.app.config;
 
+import in.bitanxen.app.dto.CaseDTO;
 import in.bitanxen.app.service.WorkflowClientService;
 
 import java.util.List;
@@ -29,7 +30,7 @@ public abstract class AbstractWorkflowOperation {
 
     public abstract void onCaseAction(CaseEvent caseEvent);
 
-    public String getCaseDetails(String caseId) {
+    public CaseDTO getCaseDetails(String caseId) {
         return this.getWorkflowClientService().getCase(this, caseId);
     }
 }

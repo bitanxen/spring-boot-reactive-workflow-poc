@@ -4,6 +4,7 @@ import in.bitanxen.app.config.AbstractWorkflowOperation;
 import in.bitanxen.app.config.CaseEvent;
 import in.bitanxen.app.config.WorkflowRegistration;
 import in.bitanxen.app.config.WorkflowRegistrationContextHolder;
+import in.bitanxen.app.dto.CaseDTO;
 import in.bitanxen.app.dto.CaseEventDTO;
 import in.bitanxen.app.dto.GetCaseDetailsDTO;
 import in.bitanxen.app.exception.WorkflowClientException;
@@ -24,13 +25,13 @@ public class WorkflowClientServiceImpl implements WorkflowClientService {
     }
 
     @Override
-    public String getCase(AbstractWorkflowOperation abstractWorkflowOperation, String caseId) {
+    public CaseDTO getCase(AbstractWorkflowOperation abstractWorkflowOperation, String caseId) {
         List<String> workflows = getWorkflowLists(abstractWorkflowOperation);
         GetCaseDetailsDTO getCaseDetails = GetCaseDetailsDTO.builder()
                 .caseId(caseId)
                 .workflowIds(workflows)
                 .build();
-        return rSocketClientOperation.fireAndForget("workflow.case.details", caseId);
+        return rSocketClientOperation.fireAndForget("workflow.case.details", caseId, CaseDTO.class);
     }
 
     @Override

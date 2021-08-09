@@ -1,5 +1,6 @@
 package in.bitanxen.app;
 
+import in.bitanxen.app.dto.CaseDTO;
 import in.bitanxen.app.service.UserWorkflowService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,7 +18,7 @@ public class UserWorkflowController {
     }
 
     @GetMapping("/workflow/case/{caseId}")
-    private String getCaseDetails(@PathVariable String caseId) {
+    private CaseDTO getCaseDetails(@PathVariable String caseId) {
         return userWorkflowService.getCaseDetails(caseId);
     }
 }
