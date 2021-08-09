@@ -48,6 +48,8 @@ public class RSocketAgentConfig {
                         .doAfterRetry(s -> System.out.println("Resume: After Retry : "+s))
                 );
         SocketAcceptor responder = RSocketMessageHandler.responder(rSocketStrategies, new ClientHandler());
+
+
         return builder
                 //.metadataMimeType(MimeType.valueOf("application/vnd.spring.rsocket.metadata+json"))
                 .dataMimeType(MimeType.valueOf("application/json"))
