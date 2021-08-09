@@ -25,6 +25,7 @@ public class RSocketConfig {
         return messageHandler;
     }
 
+    /*
     @Bean
     RSocketServerCustomizer rSocketResume() {
         Resume resume =
@@ -35,4 +36,6 @@ public class RSocketConfig {
                                         .doBeforeRetry(s -> log.debug("Disconnected. Trying to resume...")));
         return rSocketServer -> rSocketServer.resume(resume);
     }
+
+     */
 }

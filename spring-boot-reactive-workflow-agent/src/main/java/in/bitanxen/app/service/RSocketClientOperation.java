@@ -44,7 +44,8 @@ public class RSocketClientOperation {
     public <T> Flux<T> requestStream(String route, Class<T> targetClass) {
         return rSocketRequester
                 .route(route)
-                .retrieveFlux(targetClass);
+                .retrieveFlux(targetClass)
+                .onErrorStop();
     }
 
     public List<WorkflowRegistration> getService() {
