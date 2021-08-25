@@ -5,12 +5,14 @@ import in.bitanxen.app.dto.CaseStatusType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @Builder
+@ToString
 public class CaseEvent {
     private CaseEventType caseEventType;
     private String eventPerformedBy;

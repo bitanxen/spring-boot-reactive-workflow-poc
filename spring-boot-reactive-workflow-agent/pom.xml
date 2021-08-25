@@ -13,7 +13,7 @@
   <properties>
     <java.version>1.8</java.version>
     <main.basedir>${project.basedir}</main.basedir>
-    <spring.boot.version>2.5.3</spring.boot.version>
+    <spring.boot.version>2.3.7.RELEASE</spring.boot.version>
     <lombok.version>1.18.20</lombok.version>
   </properties>
 

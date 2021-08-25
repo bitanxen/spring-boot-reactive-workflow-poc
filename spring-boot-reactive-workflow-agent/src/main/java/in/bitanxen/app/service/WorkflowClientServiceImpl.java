@@ -40,6 +40,11 @@ public class WorkflowClientServiceImpl implements WorkflowClientService {
                 .subscribe(this::streamData);
     }
 
+    @Override
+    public String test() {
+        return rSocketClientOperation.fireAndForget("get.workflow.template.123", "", java.lang.String.class);
+    }
+
     private void streamData(CaseEventDTO caseEvent) {
         List<WorkflowRegistration> workflowRegistrations = WorkflowRegistrationContextHolder.getRegistrations()
                 .stream()

@@ -8,4 +8,6 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 public interface WorkflowClientService {
     CaseDTO getCase(AbstractWorkflowOperation abstractWorkflowOperation, String caseId);
     void processStreamData(ApplicationReadyEvent applicationReadyEvent);
+
+    String test();
 }

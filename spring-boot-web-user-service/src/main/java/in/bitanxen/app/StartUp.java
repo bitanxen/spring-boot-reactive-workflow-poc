@@ -10,6 +10,7 @@ import org.springframework.util.MimeType;
 @Configuration
 public class StartUp {
 
+    /*
     @Bean
     ApplicationListener<ApplicationReadyEvent> client(RSocketRequester rSocketRequester) {
         return applicationReadyEvent -> rSocketRequester.route("workflow.case.realtime")
@@ -18,4 +19,6 @@ public class StartUp {
                 .log()
                 .subscribe(System.out::println);
     }
+
+     */
 }

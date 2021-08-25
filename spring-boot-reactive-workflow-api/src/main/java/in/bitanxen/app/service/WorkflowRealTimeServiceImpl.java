@@ -43,7 +43,7 @@ public class WorkflowRealTimeServiceImpl implements WorkflowRealTimeService {
         return Mono.just(caseDetails)
                 .flatMap(this::convertInto)
                 .map(caseEventDTO -> {
-                    caseEventDTO.setCaseEventType(CaseEventType.CASE_POST_CREATE);
+                    caseEventDTO.setCaseEventType(CaseEventType.CASE_PRE_CREATE);
                     caseEventDTO.setEventPerformedBy(user.getMemberId());
                     caseEventDTO.setEventPerformedOn(LocalDateTime.now());
                     return caseEventDTO;
@@ -60,7 +60,7 @@ public class WorkflowRealTimeServiceImpl implements WorkflowRealTimeService {
         return Mono.just(caseDetails)
                 .flatMap(this::convertInto)
                 .map(caseEventDTO -> {
-                    caseEventDTO.setCaseEventType(CaseEventType.CASE_PRE_CREATE);
+                    caseEventDTO.setCaseEventType(CaseEventType.CASE_POST_CREATE);
                     caseEventDTO.setEventPerformedBy(user.getMemberId());
                     caseEventDTO.setEventPerformedOn(LocalDateTime.now());
                     return caseEventDTO;

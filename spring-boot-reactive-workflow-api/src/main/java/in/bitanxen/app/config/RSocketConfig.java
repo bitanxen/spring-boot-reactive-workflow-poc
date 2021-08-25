@@ -32,8 +32,7 @@ public class RSocketConfig {
         return messageHandler;
     }
 
-
-
+    /*
     @Bean
     RSocketServerCustomizer rSocketResume() {
         Resume resume = new Resume()
@@ -45,4 +44,6 @@ public class RSocketConfig {
                 });
         return rSocketServer -> rSocketServer.resume(resume);
     }
+
+     */
 }

@@ -31,6 +31,8 @@ public abstract class AbstractWorkflowOperation {
     public abstract void onCaseAction(CaseEvent caseEvent);
 
     public CaseDTO getCaseDetails(String caseId) {
+        String test = this.getWorkflowClientService().test();
+        System.out.println(test);
         return this.getWorkflowClientService().getCase(this, caseId);
     }
 }

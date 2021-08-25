@@ -10,6 +10,7 @@ public class WorkflowEvent extends ApplicationEvent {
     public WorkflowEvent(Object source, CaseEventDTO caseEvent) {
         super(source);
         this.caseEvent = caseEvent;
+        System.out.println(caseEvent);
     }
 
     public CaseEventDTO getCaseEvent() {
